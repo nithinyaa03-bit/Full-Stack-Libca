@@ -12,6 +12,7 @@ const Issuedbooks = () => {
     fetchIssues
   } = useApp();
 
+  console.log("update test");
   const [showModal, setShowModal] = useState(false);
 
   const defaultDueDate = new Date(Date.now() + 86400000 * 7)
