@@ -2,11 +2,13 @@ const router = require("express").Router();
 const Issue = require("../models/issue");
 const Book = require("../models/book");
 
-// ================= GET ALL ISSUES =================
+/* ================= GET ALL ISSUES ================= */
+
 router.get("/", async (req, res) => {
   try {
     const issues = await Issue.find()
       .populate("student")
+      .populate("teacher")
       .populate("book");
 
     res.json(issues);
@@ -15,10 +17,18 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ================= ISSUE A BOOK =================
+/* ================= ISSUE A BOOK ================= */
+
 router.post("/", async (req, res) => {
   try {
-    const { student, book, dueDate } = req.body;
+    const { student, teacher, book, dueDate } = req.body;
+
+    // borrower validation
+    if (!student && !teacher) {
+      return res.status(400).json({
+        message: "Student or Teacher must be selected",
+      });
+    }
 
     // Check book availability
     const selectedBook = await Book.findById(book);
@@ -33,7 +43,8 @@ router.post("/", async (req, res) => {
 
     // Create issue record
     const newIssue = new Issue({
-      student,
+      student: student || null,
+      teacher: teacher || null,
       book,
       dueDate,
     });
@@ -47,11 +58,12 @@ router.post("/", async (req, res) => {
     res.status(201).json(newIssue);
 
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
-// ================= RETURN BOOK =================
+/* ================= RETURN BOOK ================= */
+
 router.put("/return/:id", async (req, res) => {
   try {
     const issue = await Issue.findById(req.params.id);
@@ -66,6 +78,7 @@ router.put("/return/:id", async (req, res) => {
 
     issue.status = "returned";
     issue.returnDate = new Date();
+
     await issue.save();
 
     // Increase book quantity
@@ -80,7 +93,8 @@ router.put("/return/:id", async (req, res) => {
   }
 });
 
-// ================= DELETE ISSUE (optional) =================
+/* ================= DELETE ISSUE ================= */
+
 router.delete("/:id", async (req, res) => {
   try {
     const issue = await Issue.findByIdAndDelete(req.params.id);

@@ -2,50 +2,66 @@ const mongoose = require("mongoose");
 
 const issueSchema = new mongoose.Schema(
   {
+    /* ================= BORROWER ================= */
+
     student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",
-      required: true,
+      default: null
     },
+
+    teacher: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Teacher",
+      default: null
+    },
+
+    /* ================= BOOK ================= */
 
     book: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Book",
-      required: true,
+      required: true
     },
+
+    /* ================= DATES ================= */
 
     issueDate: {
       type: Date,
-      default: Date.now,
+      default: Date.now
     },
 
     dueDate: {
       type: Date,
-      required: true,
-    },
-
-    status: {
-      type: String,
-      enum: ["issued", "returned", "overdue"],
-      default: "issued",
+      required: true
     },
 
     returnDate: {
       type: Date,
-      default: null,
+      default: null
     },
 
-    // ✅ Prevent duplicate reminder emails
+    /* ================= STATUS ================= */
+
+    status: {
+      type: String,
+      enum: ["issued", "returned", "overdue"],
+      default: "issued"
+    },
+
+    /* ================= EMAIL FLAGS ================= */
+
+    // prevent duplicate reminder emails
     reminderSent: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
-    // ✅ Prevent duplicate overdue emails
+    // prevent duplicate overdue emails
     overdueEmailSent: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   { timestamps: true }
 );
