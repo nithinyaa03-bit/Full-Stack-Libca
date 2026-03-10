@@ -2,12 +2,12 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
 const AppContext = createContext();
-const API = "http://localhost:5000/api";
+const API = "https://full-stack-libca.onrender.com/api";
 
 export const AppProvider = ({ children }) => {
   const [books, setBooks] = useState([]);
   const [students, setStudents] = useState([]);
-  const [teachers, setTeachers] = useState([]);   // ✅ NEW
+  const [teachers, setTeachers] = useState([]);
   const [issues, setIssues] = useState([]);
   const [admin, setAdmin] = useState(null);
 
@@ -16,7 +16,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     fetchBooks();
     fetchStudents();
-    fetchTeachers();   // ✅ NEW
+    fetchTeachers();
     fetchIssues();
   }, []);
 
@@ -180,7 +180,7 @@ export const AppProvider = ({ children }) => {
       value={{
         books,
         students,
-        teachers, // ✅ NEW
+        teachers,
         issues,
         admin,
 
@@ -192,9 +192,9 @@ export const AppProvider = ({ children }) => {
         updateStudent,
         deleteStudent,
 
-        addTeacher,     // ✅ NEW
-        updateTeacher,  // ✅ NEW
-        deleteTeacher,  // ✅ NEW
+        addTeacher,
+        updateTeacher,
+        deleteTeacher,
 
         fetchIssues,
         issueBook,
